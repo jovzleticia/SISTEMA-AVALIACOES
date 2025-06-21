@@ -1,0 +1,1938 @@
+let exams = [
+            {
+                id: 1,
+                title: "Atividade de Organização de Dados - Comandos DDL",
+                subject: "Organização de Dados",
+                questions: [1, 2, 3, 4],
+                duration: 30,
+                status: "ativa",
+                totalPoints: 0.64,
+                description: "Avaliação sobre comandos DDL, criação de tabelas e conceitos fundamentais de banco de dados."
+            },
+            {
+                id: 2,
+                title: "Atividade de Instruções de Comandos DML",
+                subject: "Instruções de Comandos DML",
+                questions: [5, 6, 7, 8],
+                duration: 35,
+                status: "ativa",
+                totalPoints: 0.64,
+                description: "Avaliação sobre comandos DML, consultas SELECT, operadores IN, BETWEEN, comparações e tratamento de valores NULL."
+            },
+            {
+                id: 3,
+                title: "Atividade de Subquerys e Funções de Decisões",
+                subject: "Subquerys e Funções de Decisões",
+                questions: [9, 10, 11, 12],
+                duration: 45,
+                status: "ativa",
+                totalPoints: 0.68,
+                description: "Avaliação avançada sobre subquerys, consultas correlacionadas, operadores EXISTS, IN, funções de agregação e ordem de execução."
+            },
+            {
+                id: 4,
+                title: "Atividade de Cláusula GROUP BY e HAVING",
+                subject: "Cláusula GROUP BY e HAVING",
+                questions: [13, 14, 15, 16],
+                duration: 40,
+                status: "ativa",
+                totalPoints: 0.68,
+                description: "Avaliação sobre agrupamento de dados, funções de agregação (COUNT, MIN, MAX, AVG), GROUP BY e cláusula HAVING."
+            }
+        ];
+                <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Avaliações Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-role {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff3742;
+            transform: translateY(-2px);
+        }
+
+        .login-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            margin: 100px auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            height: calc(100vh - 200px);
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .content-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .add-btn {
+            padding: 12px 24px;
+            background: #2ed573;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            margin-left: auto;
+        }
+
+        .add-btn:hover {
+            background: #26de81;
+            transform: translateY(-2px);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: #ffa502;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+        }
+
+        .view-btn {
+            background: #3742fa;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .question-form {
+            margin-bottom: 20px;
+        }
+
+        .question-type {
+            margin-bottom: 15px;
+        }
+
+        .options-container {
+            margin-top: 15px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .difficulty-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .difficulty-facil {
+            background: #2ed573;
+            color: white;
+        }
+
+        .difficulty-medio {
+            background: #ffa502;
+            color: white;
+        }
+
+        .difficulty-dificil {
+            background: #ff4757;
+            color: white;
+        }
+
+        .subject-tag {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border-left: 4px solid #007acc;
+        }
+
+        .sql-keyword {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .sql-string {
+            color: #ce9178;
+        }
+
+        .sql-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .der-reference {
+            background: #e3f2fd;
+            border: 2px dashed #2196f3;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            color: #1976d2;
+            font-weight: bold;
+        }
+
+        .option-code {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 5px 0;
+            border-left: 3px solid #e1e8ed;
+            white-space: pre-wrap;
+        }
+
+        .correct-option {
+            border-left-color: #2ed573;
+            background: #f0fff4;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="loginScreen">
+        <div class="login-form">
+            <h2>🎓 Sistema de Avaliações</h2>
+            <div id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Usuário/Email:</label>
+                    <input type="text" id="loginUsername" placeholder="Digite seu usuário ou email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha:</label>
+                    <input type="password" id="loginPassword" placeholder="Digite sua senha">
+                </div>
+                <button class="btn" onclick="login()">Entrar</button>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>Não tem conta? <a href="#" onclick="showRegisterForm()" style="color: #667eea; text-decoration: none; font-weight: bold;">Cadastre-se aqui</a></p>
+                    <p><a href="#" onclick="showForgotPassword()" style="color: #999; text-decoration: none; font-size: 14px;">Esqueci minha senha</a></p>
+                </div>
+            </div>
+
+            <div id="registerForm" class="hidden">
+                <div class="form-group">
+                    <label for="registerName">Nome Completo:</label>
+                    <input type="text" id="registerName" placeholder="Digite seu nome completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" placeholder="Digite seu email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerUsername">Nome de Usuário:</label>
+                    <input type="text" id="registerUsername" placeholder="Escolha um nome de usuário" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerUserType">Tipo de Usuário:</label>
+                    <select id="registerUserType" required>
+                        <option value="">Selecione...</option>
+                        <option value="aluno">👨‍🎓 Aluno</option>
+                        <option value="professor">👨‍🏫 Professor</option>
+                    </select>
+                    <small style="color: #666; font-size: 12px;">
+                        * Contas de Professor precisam ser aprovadas pelo administrador
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha:</label>
+                    <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Senha:</label>
+                    <input type="password" id="confirmPassword" placeholder="Digite a senha novamente" required>
+                </div>
+                <div class="form-group" id="studentFields" style="display: none;">
+                    <label for="studentClass">Turma/Série:</label>
+                    <input type="text" id="studentClass" placeholder="Ex: 9º Ano A, 1º EM B">
+                </div>
+                <div class="form-group" id="teacherFields" style="display: none;">
+                    <label for="teacherSubjects">Matérias que Leciona:</label>
+                    <input type="text" id="teacherSubjects" placeholder="Ex: Matemática, Física">
+                </div>
+                <button class="btn" onclick="register()">Criar Conta</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <p>Já tem conta? <a href="#" onclick="showLoginForm()" style="color: #667eea; text-decoration: none; font-weight: bold;">Faça login</a></p>
+                </div>
+            </div>
+
+            <div id="forgotPasswordForm" class="hidden">
+                <div class="form-group">
+                    <label for="forgotEmail">Email:</label>
+                    <input type="email" id="forgotEmail" placeholder="Digite seu email para recuperação">
+                </div>
+                <button class="btn" onclick="resetPassword()">Enviar Link de Recuperação</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <p><a href="#" onclick="showLoginForm()" style="color: #667eea; text-decoration: none;">Voltar ao login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Principal -->
+    <div id="dashboard" class="hidden">
+        <div class="container">
+            <div class="header">
+                <div class="logo">🎓 Sistema de Avaliações</div>
+                <div class="user-info">
+                    <span id="welcomeText">Bem-vindo!</span>
+                    <span class="user-role" id="userRole">Usuário</span>
+                    <button class="logout-btn" onclick="logout()">Sair</button>
+                </div>
+            </div>
+
+            <div class="dashboard">
+                <div class="sidebar">
+                    <h3>Menu</h3>
+                    <div id="sidebarMenu">
+                        <!-- Menu será preenchido dinamicamente -->
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div id="mainContent">
+                        <!-- Conteúdo será carregado dinamicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para criar/editar questões -->
+    <div id="questionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Nova Questão</h2>
+            <form id="questionForm">
+                <div class="form-group">
+                    <label for="questionSubject">Matéria:</label>
+                    <input type="text" id="questionSubject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="questionDifficulty">Dificuldade:</label>
+                    <select id="questionDifficulty" required>
+                        <option value="facil">Fácil</option>
+                        <option value="medio">Médio</option>
+                        <option value="dificil">Difícil</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="questionType">Tipo de Questão:</label>
+                    <select id="questionType" onchange="updateQuestionForm()" required>
+                        <option value="multipla_escolha">Múltipla Escolha</option>
+                        <option value="verdadeiro_falso">Verdadeiro/Falso</option>
+                        <option value="dissertativa">Dissertativa</option>
+                        <option value="completar">Completar Lacunas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="questionText">Pergunta:</label>
+                    <textarea id="questionText" rows="4" required></textarea>
+                </div>
+
+                <div id="optionsContainer" class="options-container">
+                    <!-- Opções serão adicionadas dinamicamente -->
+                </div>
+
+                <div class="form-group">
+                    <label for="questionExplanation">Explicação (opcional):</label>
+                    <textarea id="questionExplanation" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn">Salvar Questão</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dados mockados para demonstração - Base de usuários
+        let users = [
+            {
+                id: 1,
+                name: "Admin Sistema",
+                username: "admin",
+                email: "admin@sistema.com",
+                password: "admin123",
+                type: "administrador",
+                status: "ativo",
+                createdAt: "2025-01-01"
+            },
+            {
+                id: 2,
+                name: "Professor João",
+                username: "prof.joao",
+                email: "joao@escola.com", 
+                password: "prof123",
+                type: "professor",
+                subjects: ["Matemática", "Física"],
+                status: "ativo",
+                createdAt: "2025-01-15"
+            },
+            {
+                id: 3,
+                name: "Maria Silva",
+                username: "maria.silva",
+                email: "maria@email.com",
+                password: "aluno123", 
+                type: "aluno",
+                class: "9º Ano A",
+                status: "ativo",
+                createdAt: "2025-02-01"
+            }
+        ];
+
+        let currentUser = null;
+        let questions = [
+            {
+                id: 1,
+                subject: "Organização de Dados",
+                difficulty: "medio",
+                type: "multipla_escolha",
+                question: "Para criarmos uma tabela de nome 'usuario' com os campos cd_codigo do tipo número inteiro e ds_nome do tipo texto de 50 posições variáveis, o comando correto é:",
+                options: [
+                    "Insert table",
+                    "Create table e Modify table estão corretas", 
+                    "Modify table",
+                    "Delete table",
+                    "Create table"
+                ],
+                correct: 4,
+                explanation: "O comando CREATE TABLE é utilizado para criar novas tabelas no banco de dados, definindo sua estrutura com campos e tipos de dados.",
+                points: 0.16
+            },
+            {
+                id: 2,
+                subject: "Organização de Dados",
+                difficulty: "facil",
+                type: "verdadeiro_falso",
+                question: "É correto afirmar que a finalidade do DDL é apenas para a criação e alteração de tabelas:",
+                correct: false,
+                explanation: "FALSO. O DDL (Data Definition Language) não serve apenas para criar e alterar tabelas. Ele também é usado para criar e gerenciar outros objetos do banco como views, índices, procedures, triggers, constraints, etc.",
+                points: 0.16
+            },
+            {
+                id: 3,
+                subject: "Organização de Dados",
+                difficulty: "medio",
+                type: "multipla_escolha",
+                question: "No Oracle Database, para criar uma tabela 'usuario' com cd_codigo (número inteiro) e ds_nome (texto variável de 50 caracteres), a sintaxe correta é:",
+                options: [
+                    "CREATE TABLE usuario (cd_codigo INT, ds_nome VARCHAR(50))",
+                    "CREATE TABLE usuario (cd_codigo NUMBER, ds_nome VARCHAR2(50))",
+                    "CREATE TABLE usuario (cd_codigo INTEGER, ds_nome TEXT(50))",
+                    "CREATE TABLE usuario (cd_codigo NUMERIC, ds_nome CHAR(50))",
+                    "CREATE TABLE usuario (cd_codigo DECIMAL, ds_nome STRING(50))"
+                ],
+                correct: 1,
+                explanation: "No Oracle, NUMBER é o tipo correto para números inteiros e VARCHAR2 é o tipo para texto de tamanho variável. Esta é a sintaxe específica do Oracle Database.",
+                points: 0.16
+            },
+            {
+                id: 4,
+                subject: "Organização de Dados", 
+                difficulty: "facil",
+                type: "multipla_escolha",
+                question: "Qual categoria de comandos SQL é responsável pela criação de constraints (chaves primárias, estrangeiras, checks) em tabelas?",
+                options: [
+                    "DDL (Data Definition Language)",
+                    "DML (Data Manipulation Language)", 
+                    "DCL (Data Control Language)",
+                    "Stored Procedures",
+                    "Triggers"
+                ],
+                correct: 0,
+                explanation: "DDL (Data Definition Language) é responsável pela definição e estrutura do banco de dados, incluindo a criação de constraints como PRIMARY KEY, FOREIGN KEY, CHECK, etc.",
+                points: 0.16
+            },
+            {
+                id: 5,
+                subject: "Instruções de Comandos DML",
+                difficulty: "medio",
+                type: "multipla_escolha",
+                question: "Selecionar os livros (todos os campos) cuja sigla seja BAN e PRO:",
+                options: [
+                    "select * from livro where ass_sigla = 'BAN' and sigla = 'PRO';",
+                    "select * from livro where ass_sigla in(BAN, PRO);",
+                    "select * from livro where ass_sigla like('%BAN,PRO%');",
+                    "select * from livro where ass_sigla in('BAN', 'PRO');",
+                    "select * from livro where ass_sigla not in('BAN', 'PRO');"
+                ],
+                correct: 3,
+                explanation: "O operador IN permite verificar se um valor está presente em uma lista de valores. A sintaxe correta é IN('BAN', 'PRO') com as strings entre aspas simples.",
+                points: 0.16
+            },
+            {
+                id: 6,
+                subject: "Instruções de Comandos DML",
+                difficulty: "facil",
+                type: "multipla_escolha",
+                question: "Selecionar os livros (todos os campos) cujo preço esteja entre 10 e 60:",
+                options: [
+                    "select * from livro where liv_preco between 10 and 60;",
+                    "select * from livro where liv_preco > 10 and not is null;",
+                    "select * from livro where liv_preco > 10 and < 60;",
+                    "select * from livro where liv_preco between 10 or 60;",
+                    "select * from livro where liv_preco in (10,60);"
+                ],
+                correct: 0,
+                explanation: "O comando BETWEEN é usado para selecionar valores dentro de um intervalo. A sintaxe correta é 'BETWEEN valor1 AND valor2', incluindo os valores limite.",
+                points: 0.16
+            },
+            {
+                id: 7,
+                subject: "Instruções de Comandos DML",
+                difficulty: "medio",
+                type: "multipla_escolha",
+                question: "Selecionar o preço do livro cujo preço seja maior que 50 e a sigla seja BAN:",
+                options: [
+                    "select liv_preco from livro where liv_preco >= 50 and ass_sigla = 'BAN';",
+                    "select liv_preco from livro where liv_preco > 50 and ass_sigla = 'BAN';",
+                    "select liv_preco from livro where liv_preco > 50 and ass_sigla = '%BAN%';",
+                    "select liv_preco from livro where liv_preco < 50 and ass_sigla = 'BAN';",
+                    "select liv_preco from livro where liv_preco > 50 and ass_sigla = BAN;"
+                ],
+                correct: 1,
+                explanation: "Para 'maior que 50' usamos o operador > (não >=). Para comparar strings, devemos usar aspas simples em torno do valor 'BAN'.",
+                points: 0.16
+            },
+            {
+                id: 8,
+                subject: "Instruções de Comandos DML",
+                difficulty: "facil",
+                type: "multipla_escolha",
+                question: "Selecionar os livros (todos os campos) cujo lançamento seja Nulo:",
+                options: [
+                    "select * from livro where liv_lancamento is null;",
+                    "select * from livro where liv_lancamento = null;",
+                    "select * from livro where liv_lancamento between null and not is null;",
+                    "select * from livro where liv_lancamento is not null;",
+                    "select * from livro where liv_lancamento > null;"
+                ],
+                correct: 0,
+                explanation: "Para verificar valores nulos em SQL, devemos usar IS NULL (não = null). O operador IS NULL é específico para verificar campos que não possuem valor.",
+                points: 0.16
+            },
+            {
+                id: 9,
+                subject: "Subquerys e Funções de Decisões",
+                difficulty: "dificil",
+                type: "multipla_escolha",
+                question: "Com base no DER abaixo, qual a forma correta para criar uma query que mostre o último nome, o número do departamento e o código do cargo de todos os empregados cuja localização do departamento seja igual a 1700?",
+                options: [
+                    `select last_name "Último Nome", 
+department_id "Código do Depto", 
+job_id "Código Do Cargo"
+from employees
+where department_id <= (select department_id 
+                       from departments 
+                       where location_id = 1700)`,
+                    `select last_name "Último Nome", 
+department_id "Código do Depto", 
+job_id "Código Do Cargo"
+from employees
+where department_id not in (select department_id 
+                           from departments 
+                           where location_id = 1700)`,
+                    `select last_name "Último Nome", 
+department_id "Código do Depto", 
+job_id "Código Do Cargo"
+from employees
+where department_id in (select department_id 
+                       from departments 
+                       where location_id = 1700)`,
+                    `select last_name "Último Nome", 
+department_id "Código do Depto", 
+job_id "Código Do Cargo"
+from employees
+where department_id > (select department_id 
+                      from departments 
+                      where location_id = 1700)`,
+                    `select last_name "Último Nome", 
+department_id "Código do Depto", 
+job_id "Código Do Cargo"
+from employees
+where department_id = (select department_id 
+                      from departments 
+                      where location_id = 1700)`
+                ],
+                correct: 2,
+                explanation: "Utilizamos IN com subquery para buscar empregados cujo department_id esteja na lista de departamentos que possuem location_id = 1700. O IN é ideal quando a subquery pode retornar múltiplos valores.",
+                points: 0.17
+            },
+            {
+                id: 10,
+                subject: "Subquerys e Funções de Decisões",
+                difficulty: "dificil",
+                type: "multipla_escolha",
+                question: "Com base no DER abaixo, qual a construção correta para encontrar os empregados que têm, no mínimo, uma pessoa subordinada a cada um deles?",
+                options: [
+                    `SELECT EMPLOYEE_ID, MANAGER_ID, FIRST_NAME, LAST_NAME, 
+     JOB_ID, DEPARTMENT_ID, SALARY
+FROM EMPLOYEES E
+WHERE NOT EXISTS (SELECT EMPLOYEE_ID
+                 FROM EMPLOYEES
+                 WHERE EMPLOYEES.MANAGER_ID = E.EMPLOYEE_ID)
+ORDER BY EMPLOYEE_ID;`,
+                    `SELECT EMPLOYEE_ID, MANAGER_ID, FIRST_NAME, LAST_NAME, 
+     JOB_ID, DEPARTMENT_ID, SALARY
+FROM EMPLOYEES E
+WHERE EXISTS IN (SELECT EMPLOYEE_ID
+                FROM EMPLOYEES
+                WHERE EMPLOYEES.MANAGER_ID = E.EMPLOYEE_ID)
+ORDER BY EMPLOYEE_ID;`,
+                    `SELECT EMPLOYEE_ID, MANAGER_ID, FIRST_NAME, LAST_NAME, 
+     JOB_ID, DEPARTMENT_ID, SALARY
+FROM EMPLOYEES E
+WHERE EMPLOYEE_ID >= (SELECT EMPLOYEE_ID
+                     FROM EMPLOYEES
+                     WHERE EMPLOYEES.MANAGER_ID = E.EMPLOYEE_ID)
+ORDER BY EMPLOYEE_ID;`,
+                    `SELECT EMPLOYEE_ID, MANAGER_ID, FIRST_NAME, LAST_NAME, 
+     JOB_ID, DEPARTMENT_ID, SALARY
+FROM EMPLOYEES E
+WHERE EXISTS (SELECT EMPLOYEE_ID
+             FROM EMPLOYEES)
+ORDER BY EMPLOYEE_ID;`,
+                    `SELECT EMPLOYEE_ID, MANAGER_ID, FIRST_NAME, LAST_NAME, 
+     JOB_ID, DEPARTMENT_ID, SALARY
+FROM EMPLOYEES E
+WHERE EXISTS (SELECT EMPLOYEE_ID
+             FROM EMPLOYEES
+             WHERE EMPLOYEES.MANAGER_ID = E.EMPLOYEE_ID)
+ORDER BY EMPLOYEE_ID;`
+                ],
+                correct: 4,
+                explanation: "EXISTS verifica se a subquery retorna pelo menos um resultado. Para encontrar gerentes (empregados com subordinados), usamos EXISTS com correlação WHERE EMPLOYEES.MANAGER_ID = E.EMPLOYEE_ID.",
+                points: 0.17
+            },
+            {
+                id: 11,
+                subject: "Subquerys e Funções de Decisões",
+                difficulty: "medio",
+                type: "multipla_escolha",
+                question: "Com base no DER abaixo, escreva a sintaxe correta para selecionar o nome, o cargo e o salário de todos os empregados cujo salário seja maior que a média salarial de todos os empregados:",
+                options: [
+                    `SELECT First_Name, Job_id, Salary
+FROM Employees
+WHERE Salary >= (SELECT AVG(Salary)
+                FROM Employees)`,
+                    `SELECT First_Name, Job_id, Salary
+FROM Employees
+WHERE Salary > (SELECT MAX(Salary)
+               FROM Employees)`,
+                    `SELECT First_Name, Job_id, Salary
+FROM Employees
+WHERE Salary > (SELECT SUM(Salary)
+               FROM Employees)`,
+                    `SELECT First_Name, Job_id, Salary
+FROM Employees
+WHERE Salary = (SELECT AVG(Salary)
+               FROM Employees)`,
+                    `SELECT First_Name, Job_id, Salary
+FROM Employees
+WHERE Salary > (SELECT AVG(Salary)
+               FROM Employees)`
+                ],
+                correct: 4,
+                explanation: "Para salários maiores que a média, usamos '>' (não '>=') com a função AVG() na subquery. A função AVG calcula a média aritmética de todos os salários.",
+                points: 0.17
+            },
+            {
+                id: 12,
+                subject: "Subquerys e Funções de Decisões",
+                difficulty: "medio",
+                type: "verdadeiro_falso",
+                question: "Quando desenvolvemos uma query e, na condição WHERE, ela possui uma subquery, o SGBD executa primeiro a query principal e depois a query secundária.",
+                correct: false,
+                explanation: "FALSO. O SGBD executa primeiro a subquery (query secundária) para obter os valores necessários, e só depois executa a query principal usando esses resultados na condição WHERE.",
+                points: 0.17
+            },
+            {
+                id: 13,
+                subject: "Cláusula GROUP BY e HAVING",
+                difficulty: "medio",
+                type: "multipla_escolha",
+                question: "Com base no DER abaixo, qual a sintaxe correta para exibir, por sigla, a quantidade de livros que existem?",
+                options: [
+                    `SELECT *
+FROM Livro
+GROUP BY ass_sigla`,
+                    `SELECT count(*)
+FROM Livro`,
+                    `SELECT ass_sigla, count(*)
+FROM Livro
+GROUP BY ass_sigla`,
+                    `SELECT ass_sigla
+FROM Livro
+GROUP BY count(*)`,
+                    `SELECT ass_sigla, count(*)
+FROM Livro
+GROUP BY ass_sigla
+HAVING ass_sigla <> null`
+                ],
+                correct: 2,
+                explanation: "Para agrupar dados e contar registros por categoria, usamos SELECT com o campo de agrupamento (ass_sigla), função de agregação COUNT(*) e GROUP BY com o mesmo campo de agrupamento.",
+                points: 0.17
+            },
+            {
+                id: 14,
+                subject: "Cláusula GROUP BY e HAVING",
+                difficulty: "facil",
+                type: "multipla_escolha",
+                question: "Se necessitarmos de uma query para identificar quantos livros foram publicados por editora, qual função de agrupamento deveremos utilizar?",
+                options: [
+                    "MIN",
+                    "MAX",
+                    "COUNT",
+                    "DISTINCT",
+                    "SUM"
+                ],
+                correct: 2,
+                explanation: "A função COUNT é usada para contar o número de registros. COUNT(*) conta todos os registros do grupo, enquanto COUNT(campo) conta apenas registros não nulos do campo especificado.",
+                points: 0.17
+            },
+            {
+                id: 15,
+                subject: "Cláusula GROUP BY e HAVING",
+                difficulty: "medio",
+                type: "verdadeiro_falso",
+                question: "Para utilizarmos a cláusula HAVING, devemos também utilizar a cláusula GROUP BY?",
+                correct: true,
+                explanation: "VERDADEIRO. A cláusula HAVING é usada para filtrar grupos criados pelo GROUP BY, portanto ela sempre deve ser acompanhada de GROUP BY. HAVING é para grupos, enquanto WHERE é para registros individuais.",
+                points: 0.17
+            },
+            {
+                id: 16,
+                subject: "Cláusula GROUP BY e HAVING",
+                difficulty: "facil",
+                type: "multipla_escolha",
+                question: "Com base no DER abaixo, qual a sintaxe correta para exibir o maior, o menor e a média dos valores dos livros?",
+                options: [
+                    `SELECT MIN(liv_preco), MAX(liv_preco), COUNT(liv_preco)
+FROM Livro`,
+                    `SELECT AROUND(liv_preco), MAX(liv_preco), AVG(liv_preco)
+FROM Livro`,
+                    `SELECT MIN(liv_preco), MAX(liv_preco), SUM(liv_preco)
+FROM Livro`,
+                    `SELECT MIN(liv_preco), MAX(liv_preco), AVG(liv_preco)
+FROM Livro`,
+                    `SELECT COUNT(liv_preco), MAX(liv_preco), AVG(liv_preco)
+FROM Livro`
+                ],
+                correct: 3,
+                explanation: "Para obter estatísticas dos valores: MIN() retorna o menor valor, MAX() o maior valor, e AVG() calcula a média aritmética. Essas são as funções de agregação corretas para análise estatística.",
+                points: 0.17
+            }
+        ];
+
+        let exams = [
+            {
+                id: 1,
+                title: "Atividade de Organização de Dados - Comandos DDL",
+                subject: "Organização de Dados",
+                questions: [1, 2, 3, 4],
+                duration: 30,
+                status: "ativa",
+                totalPoints: 0.64,
+                description: "Avaliação sobre comandos DDL, criação de tabelas e conceitos fundamentais de banco de dados."
+            },
+            {
+                id: 2,
+                title: "Atividade de Instruções de Comandos DML",
+                subject: "Instruções de Comandos DML",
+                questions: [5, 6, 7, 8],
+                duration: 35,
+                status: "ativa",
+                totalPoints: 0.64,
+                description: "Avaliação sobre comandos DML, consultas SELECT, operadores IN, BETWEEN, comparações e tratamento de valores NULL."
+            },
+            {
+                id: 3,
+                title: "Atividade de Subquerys e Funções de Decisões",
+                subject: "Subquerys e Funções de Decisões",
+                questions: [9, 10, 11, 12],
+                duration: 45,
+                status: "ativa",
+                totalPoints: 0.68,
+                description: "Avaliação avançada sobre subquerys, consultas correlacionadas, operadores EXISTS, IN, funções de agregação e ordem de execução."
+            }
+        ];
+
+        // Funcionalidades de Login e Registro
+        function showLoginForm() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
+        }
+
+        function showRegisterForm() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
+        }
+
+        function showForgotPassword() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.remove('hidden');
+        }
+
+        // Mostrar campos específicos baseado no tipo de usuário
+        document.getElementById('registerUserType').addEventListener('change', function() {
+            const type = this.value;
+            const studentFields = document.getElementById('studentFields');
+            const teacherFields = document.getElementById('teacherFields');
+            
+            if (type === 'aluno') {
+                studentFields.style.display = 'block';
+                teacherFields.style.display = 'none';
+            } else if (type === 'professor') {
+                studentFields.style.display = 'none';
+                teacherFields.style.display = 'block';
+            } else {
+                studentFields.style.display = 'none';
+                teacherFields.style.display = 'none';
+            }
+        });
+
+        function login() {
+            const usernameOrEmail = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!usernameOrEmail || !password) {
+                showNotification('Por favor, preencha todos os campos!', 'error');
+                return;
+            }
+
+            // Procurar usuário na base de dados
+            const user = users.find(u => 
+                (u.username === usernameOrEmail || u.email === usernameOrEmail) && 
+                u.password === password &&
+                u.status === 'ativo'
+            );
+
+            if (user) {
+                currentUser = user;
+                
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                
+                document.getElementById('welcomeText').textContent = `Olá, ${user.name}!`;
+                document.getElementById('userRole').textContent = user.type.charAt(0).toUpperCase() + user.type.slice(1);
+                
+                loadMenu();
+                loadDashboard();
+                
+                showNotification(`Bem-vindo(a), ${user.name}!`, 'success');
+            } else {
+                showNotification('Usuário ou senha incorretos!', 'error');
+            }
+        }
+
+        function register() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const username = document.getElementById('registerUsername').value;
+            const userType = document.getElementById('registerUserType').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validações
+            if (!name || !email || !username || !userType || !password || !confirmPassword) {
+                showNotification('Por favor, preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showNotification('A senha deve ter pelo menos 6 caracteres!', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showNotification('As senhas não coincidem!', 'error');
+                return;
+            }
+
+            // Verificar se usuário já existe
+            const existingUser = users.find(u => u.username === username || u.email === email);
+            if (existingUser) {
+                showNotification('Usuário ou email já cadastrado!', 'error');
+                return;
+            }
+
+            // Criar novo usuário
+            const newUser = {
+                id: users.length + 1,
+                name: name,
+                username: username,
+                email: email,
+                password: password,
+                type: userType,
+                status: userType === 'professor' ? 'pendente' : 'ativo',
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+
+            // Adicionar campos específicos
+            if (userType === 'aluno') {
+                newUser.class = document.getElementById('studentClass').value;
+            } else if (userType === 'professor') {
+                newUser.subjects = document.getElementById('teacherSubjects').value.split(',').map(s => s.trim());
+            }
+
+            users.push(newUser);
+
+            if (userType === 'professor') {
+                showNotification('Cadastro realizado! Sua conta será ativada após aprovação do administrador.', 'info');
+            } else {
+                showNotification('Cadastro realizado com sucesso! Você já pode fazer login.', 'success');
+            }
+
+            showLoginForm();
+            
+            // Limpar formulário
+            document.getElementById('registerForm').querySelectorAll('input, select').forEach(input => {
+                input.value = '';
+            });
+        }
+
+        function resetPassword() {
+            const email = document.getElementById('forgotEmail').value;
+            
+            if (!email) {
+                showNotification('Por favor, digite seu email!', 'error');
+                return;
+            }
+
+            const user = users.find(u => u.email === email);
+            if (user) {
+                showNotification('Link de recuperação enviado para seu email!', 'success');
+                setTimeout(() => {
+                    showLoginForm();
+                }, 2000);
+            } else {
+                showNotification('Email não encontrado!', 'error');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            
+            // Limpar campos e voltar para tela de login
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            showLoginForm();
+        }
+
+        // Carregamento do Menu baseado no tipo de usuário
+        function loadMenu() {
+            const menuContainer = document.getElementById('sidebarMenu');
+            let menuItems = [];
+
+            if (currentUser.type === 'administrador') {
+                menuItems = [
+                    {icon: '📊', text: 'Dashboard', action: 'loadDashboard'},
+                    {icon: '❓', text: 'Banco de Questões', action: 'loadQuestions'},
+                    {icon: '📝', text: 'Provas/Testes', action: 'loadExams'},
+                    {icon: '👥', text: 'Usuários', action: 'loadUsers'},
+                    {icon: '📈', text: 'Relatórios', action: 'loadReports'},
+                    {icon: '⚙️', text: 'Configurações', action: 'loadSettings'}
+                ];
+            } else if (currentUser.type === 'professor') {
+                menuItems = [
+                    {icon: '📊', text: 'Dashboard', action: 'loadDashboard'},
+                    {icon: '❓', text: 'Minhas Questões', action: 'loadQuestions'},
+                    {icon: '📝', text: 'Minhas Provas', action: 'loadExams'},
+                    {icon: '📈', text: 'Resultados', action: 'loadResults'},
+                    {icon: '⚙️', text: 'Configurações', action: 'loadSettings'}
+                ];
+            } else {
+                menuItems = [
+                    {icon: '📊', text: 'Dashboard', action: 'loadDashboard'},
+                    {icon: '📝', text: 'Provas Disponíveis', action: 'loadAvailableExams'},
+                    {icon: '📈', text: 'Meus Resultados', action: 'loadMyResults'},
+                    {icon: '⚙️', text: 'Perfil', action: 'loadProfile'}
+                ];
+            }
+
+            menuContainer.innerHTML = menuItems.map(item => 
+                `<div class="menu-item" onclick="${item.action}()">
+                    <span>${item.icon}</span>
+                    <span>${item.text}</span>
+                </div>`
+            ).join('');
+        }
+
+        // Funções de carregamento de conteúdo
+        function loadDashboard() {
+            setActiveMenuItem(0);
+            const content = document.getElementById('mainContent');
+            
+            if (currentUser.type === 'aluno') {
+                content.innerHTML = `
+                    <h1 class="content-title">Dashboard do Aluno</h1>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Provas Disponíveis</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Provas Realizadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">8.5</div>
+                            <div class="stat-label">Média Geral</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Próximas Provas</h3>
+                        </div>
+                        <p>📝 Prova de Matemática - 15/06/2025</p>
+                        <p>📝 Prova de História - 20/06/2025</p>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <h1 class="content-title">Dashboard</h1>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${questions.length}</div>
+                            <div class="stat-label">Total de Questões</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${exams.length}</div>
+                            <div class="stat-label">Provas Criadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">156</div>
+                            <div class="stat-label">Respostas Coletadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">7.8</div>
+                            <div class="stat-label">Média Geral</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Atividade Recente</h3>
+                        </div>
+                        <p>✅ Nova questão de Matemática adicionada</p>
+                        <p>📝 Prova "Teste de História" criada</p>
+                        <p>👥 12 alunos realizaram a prova de Geografia</p>
+                    </div>
+                `;
+            }
+        }
+
+        function loadQuestions() {
+            setActiveMenuItem(1);
+            const content = document.getElementById('mainContent');
+            
+            content.innerHTML = `
+                <div class="content-header">
+                    <h1 class="content-title">Banco de Questões</h1>
+                    ${currentUser.type !== 'aluno' ? '<button class="add-btn" onclick="openQuestionModal()">+ Nova Questão</button>' : ''}
+                </div>
+                <div id="questionsContainer">
+                    ${renderQuestions()}
+                </div>
+            `;
+        }
+
+        function renderQuestions() {
+            return questions.map(q => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">${q.question}</h3>
+                            <div style="margin-top: 10px;">
+                                <span class="subject-tag">${q.subject}</span>
+                                <span class="difficulty-badge difficulty-${q.difficulty}">${q.difficulty.toUpperCase()}</span>
+                                ${q.points ? `<span class="subject-tag" style="background: #ff6b6b;">⭐ ${q.points} pts</span>` : ''}
+                            </div>
+                        </div>
+                        ${currentUser.type !== 'aluno' ? `
+                        <div class="card-actions">
+                            <button class="action-btn view-btn" onclick="viewQuestion(${q.id})">Ver</button>
+                            <button class="action-btn edit-btn" onclick="editQuestion(${q.id})">Editar</button>
+                            <button class="action-btn delete-btn" onclick="deleteQuestion(${q.id})">Excluir</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="question-preview">
+                        ${renderQuestionPreview(q)}
+                        ${q.explanation ? `
+                        <div style="margin-top: 15px; padding: 10px; background: #f0f9ff; border-left: 4px solid #3b82f6; border-radius: 5px;">
+                            <strong>💡 Explicação:</strong> ${q.explanation}
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderQuestionPreview(question) {
+            let preview = '';
+            
+            // Adicionar referência ao DER se a questão mencionar
+            if (question.question.toLowerCase().includes('com base no der') || 
+                question.question.toLowerCase().includes('der abaixo')) {
+                preview += `
+                    <div class="der-reference">
+                        📊 Esta questão faz referência ao Diagrama Entidade-Relacionamento (DER)<br>
+                        <small>Consulte o material de apoio para visualizar o diagrama completo</small>
+                    </div>
+                `;
+            }
+            
+            switch(question.type) {
+                case 'multipla_escolha':
+                    preview += question.options.map((option, index) => {
+                        const isCorrect = index === question.correct;
+                        const letter = String.fromCharCode(65 + index);
+                        
+                        // Verificar se a opção contém código SQL
+                        const isCode = option.toLowerCase().includes('select') || 
+                                     option.toLowerCase().includes('create') || 
+                                     option.toLowerCase().includes('insert') ||
+                                     option.toLowerCase().includes('from') ||
+                                     option.toLowerCase().includes('where');
+                        
+                        if (isCode) {
+                            return `
+                                <div class="answer-option ${isCorrect ? 'correct-answer' : ''}">
+                                    <strong>${letter})</strong>
+                                    <div class="option-code ${isCorrect ? 'correct-option' : ''}">${formatSQLCode(option)}</div>
+                                </div>
+                            `;
+                        } else {
+                            return `
+                                <div class="answer-option ${isCorrect ? 'correct-answer' : ''}">
+                                    <strong>${letter})</strong> ${option}
+                                </div>
+                            `;
+                        }
+                    }).join('');
+                    break;
+                    
+                case 'verdadeiro_falso':
+                    preview += `
+                        <div class="answer-option ${question.correct ? 'correct-answer' : ''}">
+                            <strong>✓ Verdadeiro</strong>
+                        </div>
+                        <div class="answer-option ${!question.correct ? 'correct-answer' : ''}">
+                            <strong>✗ Falso</strong>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'dissertativa':
+                    preview += '<p><em>📝 Questão dissertativa - resposta livre</em></p>';
+                    break;
+                    
+                case 'completar':
+                    preview += '<p><em>📝 Questão de completar lacunas</em></p>';
+                    break;
+                    
+                default:
+                    preview += '<p>Tipo de questão não reconhecido</p>';
+            }
+            
+            return preview;
+        }
+
+        function formatSQLCode(code) {
+            // Função para formatar código SQL com quebras de linha adequadas
+            return code
+                .replace(/SELECT/gi, '\nSELECT')
+                .replace(/FROM/gi, '\nFROM')
+                .replace(/WHERE/gi, '\nWHERE')
+                .replace(/GROUP BY/gi, '\nGROUP BY')
+                .replace(/HAVING/gi, '\nHAVING')
+                .replace(/ORDER BY/gi, '\nORDER BY')
+                .replace(/CREATE TABLE/gi, '\nCREATE TABLE')
+                .replace(/INSERT/gi, '\nINSERT')
+                .replace(/UPDATE/gi, '\nUPDATE')
+                .replace(/DELETE/gi, '\nDELETE')
+                .replace(/AND/gi, '\n    AND')
+                .replace(/OR/gi, '\n    OR')
+                .trim();
+        }
+
+        function loadExams() {
+            setActiveMenuItem(2);
+            const content = document.getElementById('mainContent');
+            
+            content.innerHTML = `
+                <div class="content-header">
+                    <h1 class="content-title">${currentUser.type === 'aluno' ? 'Provas Disponíveis' : 'Gerenciar Provas'}</h1>
+                    ${currentUser.type !== 'aluno' ? '<button class="add-btn">+ Nova Prova</button>' : ''}
+                </div>
+                <div id="examsContainer">
+                    ${renderExams()}
+                </div>
+            `;
+        }
+
+        function renderExams() {
+            return exams.map(exam => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">${exam.title}</h3>
+                            <p>📚 ${exam.subject} | ⏱️ ${exam.duration} minutos | 📊 ${exam.status}</p>
+                            ${exam.totalPoints ? `<p>⭐ <strong>Total:</strong> ${exam.totalPoints} pontos | 📝 ${exam.questions.length} questões</p>` : ''}
+                            ${exam.description ? `<p style="color: #666; font-style: italic; margin-top: 5px;">${exam.description}</p>` : ''}
+                        </div>
+                        <div class="card-actions">
+                            ${currentUser.type === 'aluno' ? 
+                                '<button class="action-btn view-btn">🚀 Realizar Prova</button>' :
+                                `<button class="action-btn view-btn">👁️ Visualizar</button>
+                                 <button class="action-btn edit-btn">✏️ Editar</button>
+                                 <button class="action-btn delete-btn">🗑️ Excluir</button>`
+                            }
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Funções para modal de questões
+        function openQuestionModal(questionId = null) {
+            const modal = document.getElementById('questionModal');
+            const title = document.getElementById('modalTitle');
+            
+            if (questionId) {
+                title.textContent = 'Editar Questão';
+                // Carregar dados da questão para edição
+            } else {
+                title.textContent = 'Nova Questão';
+                document.getElementById('questionForm').reset();
+            }
+            
+            updateQuestionForm();
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('questionModal').style.display = 'none';
+        }
+
+        function updateQuestionForm() {
+            const type = document.getElementById('questionType').value;
+            const container = document.getElementById('optionsContainer');
+            
+            switch(type) {
+                case 'multipla_escolha':
+                    container.innerHTML = `
+                        <h4>Opções de Resposta:</h4>
+                        <input type="text" id="option1" placeholder="Opção A" required>
+                        <input type="text" id="option2" placeholder="Opção B" required>
+                        <input type="text" id="option3" placeholder="Opção C" required>
+                        <input type="text" id="option4" placeholder="Opção D" required>
+                        <div class="form-group">
+                            <label>Resposta Correta:</label>
+                            <select id="correctAnswer" required>
+                                <option value="0">A</option>
+                                <option value="1">B</option>
+                                <option value="2">C</option>
+                                <option value="3">D</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+                case 'verdadeiro_falso':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Resposta Correta:</label>
+                            <select id="correctAnswer" required>
+                                <option value="true">Verdadeiro</option>
+                                <option value="false">Falso</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+                case 'dissertativa':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Critérios de Avaliação (opcional):</label>
+                            <textarea id="criteria" rows="3" placeholder="Descreva os critérios para correção..."></textarea>
+                        </div>
+                    `;
+                    break;
+                case 'completar':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Respostas Aceitas (uma por linha):</label>
+                            <textarea id="acceptedAnswers" rows="4" placeholder="Digite as respostas aceitas, uma por linha" required></textarea>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        // Manipulação do formulário de questões
+        document.getElementById('questionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newQuestion = {
+                id: questions.length + 1,
+                subject: document.getElementById('questionSubject').value,
+                difficulty: document.getElementById('questionDifficulty').value,
+                type: document.getElementById('questionType').value,
+                question: document.getElementById('questionText').value,
+                explanation: document.getElementById('questionExplanation').value
+            };
+
+            const type = document.getElementById('questionType').value;
+            
+            switch(type) {
+                case 'multipla_escolha':
+                    newQuestion.options = [
+                        document.getElementById('option1').value,
+                        document.getElementById('option2').value,
+                        document.getElementById('option3').value,
+                        document.getElementById('option4').value
+                    ];
+                    newQuestion.correct = parseInt(document.getElementById('correctAnswer').value);
+                    break;
+                case 'verdadeiro_falso':
+                    newQuestion.correct = document.getElementById('correctAnswer').value === 'true';
+                    break;
+                case 'dissertativa':
+                    newQuestion.criteria = document.getElementById('criteria').value;
+                    break;
+                case 'completar':
+                    newQuestion.acceptedAnswers = document.getElementById('acceptedAnswers').value.split('\n').filter(a => a.trim());
+                    break;
+            }
+
+            questions.push(newQuestion);
+            closeModal();
+            loadQuestions();
+            
+            // Notificação de sucesso
+            showNotification('Questão criada com sucesso!', 'success');
+        });
+
+        // Funções auxiliares
+        function setActiveMenuItem(index) {
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        function viewQuestion(id) {
+            const question = questions.find(q => q.id === id);
+            if (question) {
+                alert(`Questão: ${question.question}\nMatéria: ${question.subject}\nDificuldade: ${question.difficulty}`);
+            }
+        }
+
+        function editQuestion(id) {
+            openQuestionModal(id);
+        }
+
+        function deleteQuestion(id) {
+            if (confirm('Tem certeza que deseja excluir esta questão?')) {
+                questions = questions.filter(q => q.id !== id);
+                loadQuestions();
+                showNotification('Questão excluída com sucesso!', 'success');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#2ed573' : type === 'error' ? '#ff4757' : '#3742fa'};
+                color: white;
+                border-radius: 10px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Funções para outras seções (placeholder)
+        function loadAvailableExams() {
+            loadExams();
+        }
+
+        function loadMyResults() {
+            setActiveMenuItem(2);
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <h1 class="content-title">Meus Resultados</h1>
+                <div class="card">
+                    <h3 class="card-title">Histórico de Provas</h3>
+                    <div style="margin-top: 15px;">
+                        <p>📝 Prova de Matemática - Nota: 8.5 - 10/06/2025</p>
+                        <p>📝 Prova de História - Nota: 9.2 - 05/06/2025</p>
+                        <p>📝 Prova de Geografia - Nota: 7.8 - 01/06/2025</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadUsers() {
+            setActiveMenuItem(3);
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <div class="content-header">
+                    <h1 class="content-title">Gerenciar Usuários</h1>
+                    <button class="add-btn" onclick="openUserModal()">+ Novo Usuário</button>
+                </div>
+                
+                <div class="stats-grid" style="margin-bottom: 30px;">
+                    <div class="stat-card">
+                        <div class="stat-number">${users.filter(u => u.type === 'aluno').length}</div>
+                        <div class="stat-label">Alunos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${users.filter(u => u.type === 'professor').length}</div>
+                        <div class="stat-label">Professores</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${users.filter(u => u.status === 'pendente').length}</div>
+                        <div class="stat-label">Pendentes</div>
+                    </div>
+                </div>
+
+                <div id="usersContainer">
+                    ${renderUsers()}
+                </div>
+            `;
+        }
+
+        function renderUsers() {
+            return users.map(user => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">${user.name}</h3>
+                            <p>📧 ${user.email} | 👤 @${user.username}</p>
+                            <div style="margin-top: 10px;">
+                                <span class="subject-tag">${user.type.toUpperCase()}</span>
+                                <span class="difficulty-badge ${user.status === 'ativo' ? 'difficulty-facil' : user.status === 'pendente' ? 'difficulty-medio' : 'difficulty-dificil'}">${user.status.toUpperCase()}</span>
+                                ${user.class ? `<span class="subject-tag" style="background: #3742fa;">${user.class}</span>` : ''}
+                                ${user.subjects ? user.subjects.map(s => `<span class="subject-tag" style="background: #2ed573;">${s}</span>`).join('') : ''}
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            ${user.status === 'pendente' ? `
+                                <button class="action-btn" style="background: #2ed573;" onclick="approveUser(${user.id})">Aprovar</button>
+                                <button class="action-btn delete-btn" onclick="rejectUser(${user.id})">Rejeitar</button>
+                            ` : `
+                                <button class="action-btn edit-btn" onclick="editUser(${user.id})">Editar</button>
+                                <button class="action-btn" style="background: ${user.status === 'ativo' ? '#ff4757' : '#2ed573'};" onclick="toggleUserStatus(${user.id})">${user.status === 'ativo' ? 'Desativar' : 'Ativar'}</button>
+                                <button class="action-btn delete-btn" onclick="deleteUser(${user.id})">Excluir</button>
+                            `}
+                        </div>
+                    </div>
+                    <p style="color: #666; font-size: 14px; margin-top: 10px;">Cadastrado em: ${new Date(user.createdAt).toLocaleDateString('pt-BR')}</p>
+                </div>
+            `).join('');
+        }
+
+        function approveUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.status = 'ativo';
+                loadUsers();
+                showNotification(`Usuário ${user.name} aprovado com sucesso!`, 'success');
+            }
+        }
+
+        function rejectUser(userId) {
+            if (confirm('Tem certeza que deseja rejeitar este usuário? Ele será removido do sistema.')) {
+                users = users.filter(u => u.id !== userId);
+                loadUsers();
+                showNotification('Usuário rejeitado e removido!', 'success');
+            }
+        }
+
+        function toggleUserStatus(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                user.status = user.status === 'ativo' ? 'inativo' : 'ativo';
+                loadUsers();
+                showNotification(`Usuário ${user.status === 'ativo' ? 'ativado' : 'desativado'} com sucesso!`, 'success');
+            }
+        }
+
+        function deleteUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user && confirm(`Tem certeza que deseja excluir ${user.name}? Esta ação não pode ser desfeita.`)) {
+                users = users.filter(u => u.id !== userId);
+                loadUsers();
+                showNotification('Usuário excluído com sucesso!', 'success');
+            }
+        }
+
+        function editUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                // Implementar modal de edição
+                showNotification('Funcionalidade de edição em desenvolvimento!', 'info');
+            }
+        }
+
+        function openUserModal() {
+            showNotification('Use a tela de cadastro para criar novos usuários ou crie diretamente aqui!', 'info');
+        }
+
+        function loadResults() {
+            setActiveMenuItem(3);
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <h1 class="content-title">Resultados das Provas</h1>
+                <div class="card">
+                    <h3 class="card-title">Últimos Resultados</h3>
+                    <div style="margin-top: 15px;">
+                        <p>📊 Prova de Matemática - Média da turma: 7.5</p>
+                        <p>📊 Prova de História - Média da turma: 8.2</p>
+                        <p>📊 Prova de Geografia - Média da turma: 6.9</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadReports() {
+            setActiveMenuItem(4);
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <h1 class="content-title">Relatórios</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Taxa de Aprovação</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">234</div>
+                        <div class="stat-label">Provas Realizadas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">45</div>
+                        <div class="stat-label">Alunos Ativos</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadSettings() {
+            const menuIndex = currentUser.type === 'administrador' ? 5 : 
+                             currentUser.type === 'professor' ? 4 : 3;
+            setActiveMenuItem(menuIndex);
+            
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <h1 class="content-title">Configurações</h1>
+                <div class="card">
+                    <h3 class="card-title">Configurações do Sistema</h3>
+                    <div style="margin-top: 15px;">
+                        <p>⚙️ Configurações gerais</p>
+                        <p>🎨 Personalização</p>
+                        <p>🔔 Notificações</p>
+                        <p>🔐 Segurança</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadProfile() {
+            setActiveMenuItem(3);
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <h1 class="content-title">Meu Perfil</h1>
+                <div class="card">
+                    <h3 class="card-title">Informações Pessoais</h3>
+                    <div style="margin-top: 15px;">
+                        <p><strong>Nome:</strong> ${currentUser.name}</p>
+                        <p><strong>Tipo:</strong> ${currentUser.type}</p>
+                        <p><strong>Email:</strong> ${currentUser.name.toLowerCase()}@escola.com</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Função para adicionar questões via API (para quando você mandar as questões)
+        function addQuestionFromAPI(questionData) {
+            const newQuestion = {
+                id: questions.length + 1,
+                ...questionData
+            };
+            questions.push(newQuestion);
+            
+            // Se estiver na tela de questões, atualizar
+            if (document.getElementById('questionsContainer')) {
+                loadQuestions();
+            }
+            
+            showNotification('Nova questão adicionada!', 'success');
+        }
+
+        // Evento para fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('questionModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Adicionar animação CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            .fade-in {
+                animation: fadeIn 0.5s ease;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Se houver dados salvos no localStorage, carregar
+            // Nota: Como mencionado, não usar localStorage em produção
+            console.log('Sistema de Avaliações carregado!');
+        });
+    </script>
+</body>
+</html>
